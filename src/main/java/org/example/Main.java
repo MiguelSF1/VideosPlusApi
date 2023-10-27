@@ -7,8 +7,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
 
