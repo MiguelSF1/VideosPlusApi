@@ -62,6 +62,5 @@ public class UserRepository {
         ResultSet rs = user.executeQuery();
         return rs.first();
     }
-
 }
 
