@@ -26,13 +26,6 @@ public class UserResource {
         return new UserRepository().getUser(id);
     }
 
-    /*
-    @GET
-    @Path("/{username}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("username") String username) throws SQLException {
-        return new UserRepository().getUser(username);
-    } */
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -62,18 +55,4 @@ public class UserResource {
         new UserRepository().deleteUser(id);
         return Response.ok().entity("Item has been deleted successfully.").build();
     }
-
-
-    /*
-    @Path("/{username}")
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteByUsername(@PathParam("username") String username) throws SQLException {
-        if (!new UserRepository().userExists(username)) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(username + "Doesn't exist").build();
-        }
-        new UserRepository().deleteUser(username);
-        return Response.ok().entity("Item has been deleted successfully.").build();
-    } */
-
 }

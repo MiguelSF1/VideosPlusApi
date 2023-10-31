@@ -35,7 +35,6 @@ public class MovieVersionRepository {
         deletedMovieVersion.executeUpdate();
     }
 
-    // make it by format or resolution and movie id
     public MovieVersion getMovieVersion(int id) throws SQLException {
         PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE movie_id = ?");
         movieVersion.setInt(1, id);
