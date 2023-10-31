@@ -4,7 +4,6 @@ import org.example.objects.Movie;
 import org.example.repositories.MovieRepository;
 
 import javax.ws.rs.*;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
