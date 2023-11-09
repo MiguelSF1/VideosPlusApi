@@ -4,6 +4,7 @@ package org.example.resources;
 import org.example.objects.User;
 import org.example.repositories.UserRepository;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,10 +21,10 @@ public class UserResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("id") int id) throws SQLException {
-        return new UserRepository().getUser(id);
+    public User getUser(@PathParam("username") String username) throws SQLException {
+        return new UserRepository().getUser(username);
     }
 
 
@@ -44,6 +45,7 @@ public class UserResource {
         new UserRepository().updateUser(user);
         return Response.ok().entity(user).build();
     }
+
 
     @Path("/{id}")
     @DELETE

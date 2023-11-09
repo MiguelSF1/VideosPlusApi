@@ -35,9 +35,9 @@ public class UserRepository {
     }
 
 
-    public User getUser(int id) throws SQLException {
-        PreparedStatement user = conn.prepareStatement("SELECT * FROM users WHERE user_id = ?");
-        user.setInt(1, id);
+    public User getUser(String username) throws SQLException {
+        PreparedStatement user = conn.prepareStatement("SELECT * FROM users WHERE username = ?");
+        user.setString(1, username);
         ResultSet rs = user.executeQuery();
         rs.first();
         return new User(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4));

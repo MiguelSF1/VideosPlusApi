@@ -1,5 +1,6 @@
 package org.example.objects;
 
+
 public class User {
     private final int id;
     private final String username;
@@ -26,4 +27,5 @@ public class User {
     }
 
     public int getPermissionLevel() { return permissionLevel; }
+
 }
