@@ -35,15 +35,20 @@ public class MovieVersionRepository {
         deletedMovieVersion.executeUpdate();
     }
 
-    public MovieVersion getMovieVersion(int id) throws SQLException {
+    public List<MovieVersion> getMovieVersions(int id) throws SQLException {
         PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE movie_id = ?");
         movieVersion.setInt(1, id);
         ResultSet rs = movieVersion.executeQuery();
         rs.first();
-        return new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5));
+        List<MovieVersion> list = new ArrayList<>();
+        list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+        while (rs.next()) {
+            list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+        }
+        return list;
     }
 
-    public List<MovieVersion> getAllVersionsOfMovie() throws SQLException {
+    public List<MovieVersion> getAllVersionsOfMovies() throws SQLException {
         PreparedStatement movieVersions = conn.prepareStatement("SELECT * FROM movie_versions");
         ResultSet rs = movieVersions.executeQuery();
         rs.first();

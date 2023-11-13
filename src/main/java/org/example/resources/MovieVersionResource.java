@@ -15,14 +15,14 @@ public class MovieVersionResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<MovieVersion> getAll() throws SQLException {
-        return new MovieVersionRepository().getAllVersionsOfMovie();
+        return new MovieVersionRepository().getAllVersionsOfMovies();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public MovieVersion getMovieVersion(@PathParam("id") int id) throws SQLException {
-        return new MovieVersionRepository().getMovieVersion(id);
+    public List<MovieVersion> getMovieVersions(@PathParam("id") int id) throws SQLException {
+        return new MovieVersionRepository().getMovieVersions(id);
     }
 
     @PUT

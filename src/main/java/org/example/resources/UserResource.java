@@ -36,14 +36,12 @@ public class UserResource {
 
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response update(User user) throws SQLException {
-        if (!new UserRepository().userExists(user.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(user.getId() + "Doesn't exist").build();
+    public Response login(User user) throws SQLException {
+        if (!new UserRepository().login(user.getUsername(), user.getPassword())) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Failed Login Attempt").build();
         }
-        new UserRepository().updateUser(user);
-        return Response.ok().entity(user).build();
+        return Response.ok().entity("Successful Login Attempt").build();
     }
 
 

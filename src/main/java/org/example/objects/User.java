@@ -2,16 +2,19 @@ package org.example.objects;
 
 
 public class User {
-    private final int id;
-    private final String username;
-    private final String password;
-    private final int permissionLevel;
+    private int id;
+    private String username;
 
-    public User(int id, String username, String password, int permissionLevel) {
+    private String password;
+
+    public User(int id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.permissionLevel = permissionLevel;
+    }
+
+    public User() {
+
     }
 
     public int getId() {
@@ -26,6 +29,16 @@ public class User {
         return password;
     }
 
-    public int getPermissionLevel() { return permissionLevel; }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

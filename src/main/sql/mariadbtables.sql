@@ -8,8 +8,7 @@ USE videosplus;
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(100) NOT NULL,
-    permission_level INT NOT NULL
+    password VARCHAR(100) NOT NULL
 );
 
 -- Table for Movies
@@ -20,7 +19,6 @@ CREATE TABLE movies (
     duration INT NOT NULL,
     poster VARCHAR(255) NOT NULL,
     rating FLOAT NOT NULL,
-    genre VARCHAR(255) NOT NULL,
     summary TEXT NOT NULL
 );
 
@@ -32,12 +30,5 @@ CREATE TABLE movie_versions (
     movie_resolution VARCHAR(10) NOT NULL, 
     movie_link VARCHAR(100) NOT NULL,
     FOREIGN KEY (movie_id) REFERENCES movies(movie_id)
-);
-
-CREATE TABLE user_favorites (
-   user_id INT,
-   movie_id INT,
-   FOREIGN KEY (user_id) REFERENCES users(user_id),
-   FOREIGN KEY (movie_id) REFERENCES movies(movie_id)
 );
 
