@@ -36,16 +36,16 @@ public class UserResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("User Already Exists").build();
         }
 
-        User createdUser = new UserRepository().insertUser(user);
-        return Response.ok().entity(createdUser).build();
+        new UserRepository().insertUser(user);
+        return Response.ok().entity("user created").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(User user) throws SQLException {
-        User updatedUser = new UserRepository().updateUser(user);
-        return Response.ok().entity(updatedUser).build();
+        new UserRepository().updateUser(user);
+        return Response.ok().entity("user updated").build();
     }
 
     @POST
@@ -63,10 +63,10 @@ public class UserResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) throws SQLException {
-        if (id == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID 0").build();
+        if (!new UserRepository().userExistsById(id)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
         new UserRepository().deleteUser(id);
-        return Response.ok().entity("Item has been deleted successfully.").build();
+        return Response.ok().entity("user deleted").build();
     }
 }

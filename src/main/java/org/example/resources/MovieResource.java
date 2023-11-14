@@ -21,14 +21,15 @@ public class MovieResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Movie getById(@PathParam("id") int id) throws SQLException {
+    public Movie getMovie(@PathParam("id") int id) throws SQLException {
         return new MovieRepository().getMovie(id);
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void insert(Movie movie) throws SQLException {
+    public Response insert(Movie movie) throws SQLException {
         new MovieRepository().insertMovie(movie);
+        return Response.ok().entity("movie added").build();
     }
 
     @POST
@@ -36,7 +37,7 @@ public class MovieResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(Movie movie) throws SQLException {
         if (!new MovieRepository().movieExists(movie.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(movie.getId() + "Doesn't exist").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(movie.getId() + " Doesn't exist").build();
         }
         new MovieRepository().updateMovie(movie);
         return Response.ok().entity(movie).build();
@@ -46,8 +47,8 @@ public class MovieResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) throws SQLException {
-        if (id == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID 0").build();
+        if (!new MovieRepository().movieExists(id)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
         new MovieRepository().deleteMovie(id);
         return Response.ok().entity("Item has been deleted successfully.").build();

@@ -13,7 +13,7 @@ public class MovieVersionRepository {
 
     public void insertMovieVersion(MovieVersion movieVersion) throws SQLException {
         PreparedStatement insertedMovieVersion = conn.prepareStatement("INSERT INTO movie_versions (movie_id, movie_format, movie_resolution, movie_link) VALUES (?, ?, ?, ?)");
-        insertedMovieVersion.setInt(1, movieVersion.getId());
+        insertedMovieVersion.setInt(1, movieVersion.getMovieId());
         insertedMovieVersion.setString(2, movieVersion.getMovieFormat());
         insertedMovieVersion.setString(3, movieVersion.getMovieResolution());
         insertedMovieVersion.setString(4, movieVersion.getMovieLink());
@@ -21,16 +21,17 @@ public class MovieVersionRepository {
     }
 
     public void updateMovieVersion(MovieVersion movieVersion) throws SQLException {
-        PreparedStatement updatedMovieVersion = conn.prepareStatement("UPDATE movie_versions SET movie_format = ?, movie_resolution = ?, movie_link = ? WHERE movie_id = ?");
+        PreparedStatement updatedMovieVersion = conn.prepareStatement("UPDATE movie_versions SET movie_format = ?, movie_resolution = ?, movie_link = ?, movie_id = ? WHERE version_id = ?");
         updatedMovieVersion.setString(1, movieVersion.getMovieFormat());
         updatedMovieVersion.setString(2, movieVersion.getMovieResolution());
         updatedMovieVersion.setString(3, movieVersion.getMovieLink());
         updatedMovieVersion.setInt(4, movieVersion.getMovieId());
+        updatedMovieVersion.setInt(5, movieVersion.getId());
         updatedMovieVersion.executeUpdate();
     }
 
     public void deleteMovieVersion(int id) throws SQLException {
-        PreparedStatement deletedMovieVersion = conn.prepareStatement("DELETE FROM movie_versions WHERE movie_id = ?");
+        PreparedStatement deletedMovieVersion = conn.prepareStatement("DELETE FROM movie_versions WHERE version_id = ?");
         deletedMovieVersion.setInt(1, id);
         deletedMovieVersion.executeUpdate();
     }
@@ -61,7 +62,7 @@ public class MovieVersionRepository {
     }
 
     public boolean movieVersionExists(int id) throws SQLException {
-        PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE movie_id = ?");
+        PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?");
         movieVersion.setInt(1, id);
         ResultSet rs = movieVersion.executeQuery();
         return rs.first();

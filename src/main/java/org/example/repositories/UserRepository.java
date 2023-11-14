@@ -12,21 +12,19 @@ public class UserRepository {
 
     public UserRepository() throws SQLException {}
 
-    public User insertUser(User user) throws SQLException {
+    public void insertUser(User user) throws SQLException {
         PreparedStatement insertedUser = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?);");
         insertedUser.setString(1, user.getUsername());
         insertedUser.setString(2, user.getPassword());
         insertedUser.executeUpdate();
-        return this.getUser(user.getUsername());
     }
 
-    public User updateUser(User user) throws SQLException {
+    public void updateUser(User user) throws SQLException {
         PreparedStatement updatedUser = conn.prepareStatement("UPDATE users SET password = ?, username = ? WHERE user_id = ?");
         updatedUser.setString(1, user.getPassword());
         updatedUser.setString(2, user.getUsername());
         updatedUser.setInt(3, user.getId());
         updatedUser.executeUpdate();
-        return this.getUser(user.getUsername());
     }
 
     public void deleteUser(int id) throws SQLException {
@@ -60,6 +58,13 @@ public class UserRepository {
     public boolean userExists(String username) throws SQLException {
         PreparedStatement user = conn.prepareStatement("SELECT * FROM users WHERE username = ?");
         user.setString(1, username);
+        ResultSet rs = user.executeQuery();
+        return rs.first();
+    }
+
+    public boolean userExistsById(int id) throws SQLException {
+        PreparedStatement user = conn.prepareStatement("SELECT * FROM users WHERE user_id = ?");
+        user.setInt(1, id);
         ResultSet rs = user.executeQuery();
         return rs.first();
     }

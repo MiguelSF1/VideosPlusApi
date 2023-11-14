@@ -2,6 +2,7 @@ package org.example.resources;
 
 
 import org.example.objects.MovieVersion;
+import org.example.repositories.MovieRepository;
 import org.example.repositories.MovieVersionRepository;
 
 import javax.ws.rs.*;
@@ -27,16 +28,21 @@ public class MovieVersionResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void insert(MovieVersion movieVersion) throws SQLException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insert(MovieVersion movieVersion) throws SQLException {
+        if (!new MovieRepository().movieExists(movieVersion.getMovieId())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid MovieId").build();
+        }
         new MovieVersionRepository().insertMovieVersion(movieVersion);
+        return Response.ok().entity("Movie Version created").build();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(MovieVersion movieVersion) throws SQLException {
-        if (!new MovieVersionRepository().movieVersionExists(movieVersion.getId())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(movieVersion.getId() + "Doesn't exist").build();
+        if (!new MovieVersionRepository().movieVersionExists(movieVersion.getId()) || !new MovieRepository().movieExists(movieVersion.getMovieId())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("invalid ID").build();
         }
         new MovieVersionRepository().updateMovieVersion(movieVersion);
         return Response.ok().entity(movieVersion).build();
@@ -46,10 +52,10 @@ public class MovieVersionResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) throws SQLException {
-        if (id == 0) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID 0").build();
+        if (!new MovieVersionRepository().movieVersionExists(id)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
         new MovieVersionRepository().deleteMovieVersion(id);
-        return Response.ok().entity("Item has been deleted successfully.").build();
+        return Response.ok().entity("Movie Version deleted").build();
     }
 }
