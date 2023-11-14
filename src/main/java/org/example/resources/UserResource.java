@@ -30,12 +30,26 @@ public class UserResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void insert(User user) throws SQLException {
-        new UserRepository().insertUser(user);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response insert(User user) throws SQLException {
+        if (new UserRepository().userExists(user.getUsername())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("User Already Exists").build();
+        }
+
+        User createdUser = new UserRepository().insertUser(user);
+        return Response.ok().entity(createdUser).build();
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response update(User user) throws SQLException {
+        User updatedUser = new UserRepository().updateUser(user);
+        return Response.ok().entity(updatedUser).build();
+    }
 
     @POST
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(User user) throws SQLException {
         if (!new UserRepository().login(user.getUsername(), user.getPassword())) {

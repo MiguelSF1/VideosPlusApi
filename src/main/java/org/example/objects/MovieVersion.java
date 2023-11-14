@@ -1,11 +1,11 @@
 package org.example.objects;
 
 public class MovieVersion {
-    private final int id;
-    private final int movieId;
-    private final String movieFormat;
-    private final String movieResolution;
-    private final String movieLink;
+    private int id;
+    private int movieId;
+    private String movieFormat;
+    private String movieResolution;
+    private String movieLink;
 
     public MovieVersion(int id, int movieId, String movieFormat, String movieResolution, String movieLink) {
         this.id = id;
@@ -13,6 +13,10 @@ public class MovieVersion {
         this.movieFormat = movieFormat;
         this.movieResolution = movieResolution;
         this.movieLink = movieLink;
+    }
+
+    public MovieVersion() {
+
     }
 
     public int getId() {
@@ -33,5 +37,25 @@ public class MovieVersion {
 
     public String getMovieLink() {
         return movieLink;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
+    }
+
+    public void setMovieFormat(String movieFormat) {
+        this.movieFormat = movieFormat;
+    }
+
+    public void setMovieResolution(String movieResolution) {
+        this.movieResolution = movieResolution;
+    }
+
+    public void setMovieLink(String movieLink) {
+        this.movieLink = movieLink;
     }
 }

@@ -3,13 +3,13 @@ package org.example.objects;
 import java.sql.Date;
 
 public class Movie {
-    private final int id;
-    private final String title;
-    private final Date releaseDate;
-    private final int duration;
-    private final String poster;
-    private final float rating;
-    private final String summary;
+    private int id;
+    private String title;
+    private Date releaseDate;
+    private int duration;
+    private String poster;
+    private float rating;
+    private String summary;
 
 
     public Movie(int id, String title, Date releaseDate, int duration, String poster, float rating, String summary) {
@@ -20,6 +20,10 @@ public class Movie {
         this.poster = poster;
         this.rating = rating;
         this.summary = summary;
+    }
+
+    public Movie() {
+
     }
 
     public int getId() {
@@ -41,5 +45,33 @@ public class Movie {
 
     public String getSummary() {
         return summary;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public void setPoster(String poster) {
+        this.poster = poster;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }
