@@ -11,6 +11,12 @@ CREATE TABLE users (
     password VARCHAR(100) NOT NULL
 );
 
+CREATE TABLE users_cms (
+   user_id INT AUTO_INCREMENT PRIMARY KEY,
+   username VARCHAR(50) NOT NULL UNIQUE,
+   password VARCHAR(100) NOT NULL
+);
+
 -- Table for Movies
 CREATE TABLE movies (
     movie_id INT AUTO_INCREMENT PRIMARY KEY,
