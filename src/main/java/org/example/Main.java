@@ -1,44 +1,17 @@
 package org.example;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.servlet.ServletContainer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.example.resources.MovieResource;
+import org.example.resources.MovieVersionResource;
+import org.example.resources.UserResource;
+import org.example.resources.UserResourceCMS;
+import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
-
-import static org.eclipse.jetty.servlet.ServletContextHandler.NO_SESSIONS;
-
+import java.net.URI;
 
 public class Main {
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) {
-
-        Server server = new Server(8080);
-
-        ServletContextHandler servletContextHandler = new ServletContextHandler(NO_SESSIONS);
-
-        servletContextHandler.setContextPath("/");
-        server.setHandler(servletContextHandler);
-
-        ServletHolder servletHolder = servletContextHandler.addServlet(ServletContainer.class, "/api/*");
-        servletHolder.setInitOrder(0);
-        servletHolder.setInitParameter(
-                "jersey.config.server.provider.packages",
-                "org.example.resources"
-        );
-
-        try {
-            server.start();
-            server.join();
-        } catch (Exception ex) {
-            logger.error("Error occurred while starting Jetty", ex);
-            System.exit(1);
-        }
-
-        finally {
-            server.destroy();
-        }
+        final ResourceConfig config = new ResourceConfig(UserResourceCMS.class, UserResource.class, MovieVersionResource.class, MovieResource.class);
+        JettyHttpContainerFactory.createServer(URI.create("http://192.168.1.103:8080/"), config);
     }
 }

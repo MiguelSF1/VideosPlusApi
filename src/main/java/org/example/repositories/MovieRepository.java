@@ -2,6 +2,7 @@ package org.example.repositories;
 
 
 import org.example.objects.Movie;
+import org.example.objects.MovieVersion;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,6 +40,10 @@ public class MovieRepository {
         PreparedStatement deletedMovie = conn.prepareStatement("DELETE FROM movies WHERE movie_id = ?");
         deletedMovie.setInt(1, id);
         deletedMovie.executeUpdate();
+        List<MovieVersion> movieVersions = new MovieVersionRepository().getMovieVersions(id);
+        for (MovieVersion movieVersion : movieVersions) {
+            new MovieVersionRepository().deleteMovieVersion(movieVersion.getId());
+        }
     }
 
     public Movie getMovie(int id) throws SQLException {

@@ -15,6 +15,13 @@ public class MovieVersion {
         this.movieLink = movieLink;
     }
 
+    public MovieVersion(int movieId, String movieFormat, String movieResolution, String movieLink) {
+        this.movieId = movieId;
+        this.movieFormat = movieFormat;
+        this.movieResolution = movieResolution;
+        this.movieLink = movieLink;
+    }
+
     public MovieVersion() {
 
     }

@@ -20,14 +20,12 @@ public class MovieVersionRepository {
         insertedMovieVersion.executeUpdate();
     }
 
-    public void updateMovieVersion(MovieVersion movieVersion) throws SQLException {
-        PreparedStatement updatedMovieVersion = conn.prepareStatement("UPDATE movie_versions SET movie_format = ?, movie_resolution = ?, movie_link = ?, movie_id = ? WHERE version_id = ?");
-        updatedMovieVersion.setString(1, movieVersion.getMovieFormat());
-        updatedMovieVersion.setString(2, movieVersion.getMovieResolution());
-        updatedMovieVersion.setString(3, movieVersion.getMovieLink());
-        updatedMovieVersion.setInt(4, movieVersion.getMovieId());
-        updatedMovieVersion.setInt(5, movieVersion.getId());
-        updatedMovieVersion.executeUpdate();
+    public MovieVersion getMovieVersion(int id) throws SQLException {
+        PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?");
+        movieVersion.setInt(1, id);
+        ResultSet rs = movieVersion.executeQuery();
+        rs.first();
+        return new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5));
     }
 
     public void deleteMovieVersion(int id) throws SQLException {
