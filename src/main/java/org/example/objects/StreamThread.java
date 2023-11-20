@@ -1,8 +1,6 @@
 package org.example.objects;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 public class StreamThread extends Thread {
 
@@ -24,8 +22,6 @@ public class StreamThread extends Thread {
         processBuilder.command(cmd);
         try {
             Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while ((reader.readLine()) != null) {}
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

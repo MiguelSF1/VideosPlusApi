@@ -1,8 +1,6 @@
 package org.example.resources;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
 import org.example.objects.LowRes;
 import org.example.objects.MovieVersion;
@@ -14,13 +12,11 @@ import org.example.repositories.MovieVersionRepository;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-//import jakarta.servlet.http.HttpServlet;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
 @Path("/movieVersions")
 public class MovieVersionResource {
