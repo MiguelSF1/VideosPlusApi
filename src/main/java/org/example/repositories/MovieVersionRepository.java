@@ -7,62 +7,92 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MovieVersionRepository {
-    private final Connection conn = DriverManager.getConnection("jdbc:mariadb://localhost/videosplus", "root", "ola123");
+    private static MovieVersionRepository instance;
+    private final String dbUrl = "jdbc:mariadb://localhost/videosplus";
+    private final String dbUser = "root";
+    private final String dbPassword = "ola123";
 
-    public MovieVersionRepository() throws SQLException {}
+    private MovieVersionRepository() {}
+
+    public static MovieVersionRepository getInstance() {
+        if (instance == null) {
+            instance = new MovieVersionRepository();
+        }
+
+        return instance;
+    }
 
     public void insertMovieVersion(MovieVersion movieVersion) throws SQLException {
-        PreparedStatement insertedMovieVersion = conn.prepareStatement("INSERT INTO movie_versions (movie_id, movie_format, movie_resolution, movie_link) VALUES (?, ?, ?, ?)");
-        insertedMovieVersion.setInt(1, movieVersion.getMovieId());
-        insertedMovieVersion.setString(2, movieVersion.getMovieFormat());
-        insertedMovieVersion.setString(3, movieVersion.getMovieResolution());
-        insertedMovieVersion.setString(4, movieVersion.getMovieLink());
-        insertedMovieVersion.executeUpdate();
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            try (PreparedStatement insertedMovieVersion = conn.prepareStatement("INSERT INTO movie_versions " +
+                    "(movie_id, movie_format, movie_resolution, movie_link) VALUES (?, ?, ?, ?)")) {
+                insertedMovieVersion.setInt(1, movieVersion.getMovieId());
+                insertedMovieVersion.setString(2, movieVersion.getMovieFormat());
+                insertedMovieVersion.setString(3, movieVersion.getMovieResolution());
+                insertedMovieVersion.setString(4, movieVersion.getMovieLink());
+                insertedMovieVersion.executeUpdate();
+            }
+        }
     }
 
     public MovieVersion getMovieVersion(int id) throws SQLException {
-        PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?");
-        movieVersion.setInt(1, id);
-        ResultSet rs = movieVersion.executeQuery();
-        rs.first();
-        return new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5));
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            try (PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?")) {
+                movieVersion.setInt(1, id);
+                try (ResultSet rs = movieVersion.executeQuery()) {
+                    rs.first();
+                    return new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5));
+                }
+            }
+        }
     }
 
     public void deleteMovieVersion(int id) throws SQLException {
-        PreparedStatement deletedMovieVersion = conn.prepareStatement("DELETE FROM movie_versions WHERE version_id = ?");
-        deletedMovieVersion.setInt(1, id);
-        deletedMovieVersion.executeUpdate();
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            try (PreparedStatement deletedMovieVersion = conn.prepareStatement("DELETE FROM movie_versions WHERE version_id = ?")) {
+                deletedMovieVersion.setInt(1, id);
+                deletedMovieVersion.executeUpdate();
+            }
+        }
     }
 
     public List<MovieVersion> getMovieVersions(int id) throws SQLException {
-        PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE movie_id = ?");
-        movieVersion.setInt(1, id);
-        ResultSet rs = movieVersion.executeQuery();
-        rs.first();
-        List<MovieVersion> list = new ArrayList<>();
-        list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
-        while (rs.next()) {
-            list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            try (PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE movie_id = ?")) {
+                movieVersion.setInt(1, id);
+                try (ResultSet rs = movieVersion.executeQuery()) {
+                    List<MovieVersion> list = new ArrayList<>();
+                    while (rs.next()) {
+                        list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                    }
+                    return list;
+                }
+            }
         }
-        return list;
     }
 
     public List<MovieVersion> getAllVersionsOfMovies() throws SQLException {
-        PreparedStatement movieVersions = conn.prepareStatement("SELECT * FROM movie_versions");
-        ResultSet rs = movieVersions.executeQuery();
-        rs.first();
-        List<MovieVersion> list = new ArrayList<>();
-        list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
-        while (rs.next()) {
-            list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            try (PreparedStatement movieVersions = conn.prepareStatement("SELECT * FROM movie_versions")) {
+                try (ResultSet rs = movieVersions.executeQuery()) {
+                    List<MovieVersion> list = new ArrayList<>();
+                    while (rs.next()) {
+                        list.add(new MovieVersion(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5)));
+                    }
+                    return list;
+                }
+            }
         }
-        return list;
     }
 
     public boolean movieVersionExists(int id) throws SQLException {
-        PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?");
-        movieVersion.setInt(1, id);
-        ResultSet rs = movieVersion.executeQuery();
-        return rs.first();
+        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+            try (PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?")) {
+                movieVersion.setInt(1, id);
+                try (ResultSet rs = movieVersion.executeQuery()) {
+                    return rs.first();
+                }
+            }
+        }
     }
 }

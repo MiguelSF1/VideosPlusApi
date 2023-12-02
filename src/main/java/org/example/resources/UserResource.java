@@ -16,56 +16,45 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getAll() throws SQLException {
-        return new UserRepository().getAllUsers();
+        return UserRepository.getInstance().getAllUsers();
     }
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public User getUser(@PathParam("username") String username) throws SQLException {
-        return new UserRepository().getUser(username);
-    }
-
-
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response insert(User user) throws SQLException {
-        if (new UserRepository().userExists(user.getUsername())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("User Already Exists").build();
-        }
-
-        new UserRepository().insertUser(user);
-        return Response.ok().entity("user created").build();
+        return UserRepository.getInstance().getUser(username);
     }
 
     @POST
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response update(User user) throws SQLException {
-        new UserRepository().updateUser(user);
-        return Response.ok().entity("user updated").build();
+    public Response insert(User user) throws SQLException {
+        if (UserRepository.getInstance().userExists(user.getUsername())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("User Already Exists").build();
+        }
+
+        UserRepository.getInstance().insertUser(user);
+        return Response.ok().entity("user created").build();
     }
 
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response login(User user) throws SQLException {
-        if (!new UserRepository().login(user.getUsername(), user.getPassword())) {
+        if (!UserRepository.getInstance().login(user.getUsername(), user.getPassword())) {
             return Response.status(Response.Status.UNAUTHORIZED).entity("Failed Login Attempt").build();
         }
         return Response.ok().entity("Successful Login Attempt").build();
     }
 
-
     @Path("/{id}")
     @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) throws SQLException {
-        if (!new UserRepository().userExistsById(id)) {
+        if (!UserRepository.getInstance().userExistsById(id)) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
-        new UserRepository().deleteUser(id);
+        UserRepository.getInstance().deleteUser(id);
         return Response.ok().entity("user deleted").build();
     }
 }

@@ -21,7 +21,7 @@ CREATE TABLE users_cms (
 CREATE TABLE movies (
     movie_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    release_date DATE NOT NULL,
+    release_date INT NOT NULL,
     duration INT NOT NULL,
     poster VARCHAR(255) NOT NULL,
     rating FLOAT NOT NULL,

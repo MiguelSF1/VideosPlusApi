@@ -5,14 +5,14 @@ import java.sql.Date;
 public class Movie {
     private int id;
     private String title;
-    private Date releaseDate;
+    private int releaseDate;
     private int duration;
     private String poster;
     private float rating;
     private String summary;
 
 
-    public Movie(int id, String title, Date releaseDate, int duration, String poster, float rating, String summary) {
+    public Movie(int id, String title, int releaseDate, int duration, String poster, float rating, String summary) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -34,7 +34,7 @@ public class Movie {
         return title;
     }
 
-    public Date getReleaseDate() { return releaseDate; }
+    public int getReleaseDate() { return releaseDate; }
 
     public int getDuration() { return duration; }
 
@@ -55,7 +55,7 @@ public class Movie {
         this.title = title;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(int releaseDate) {
         this.releaseDate = releaseDate;
     }
 

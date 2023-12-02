@@ -7,7 +7,7 @@ public class StreamThread extends Thread {
     int videoId;
     String MoviePath, movieRes, movieFormat;
 
-    public StreamThread(int videoId, String moviePath, String movieRes, String movieFormat){
+    public StreamThread(int videoId, String moviePath, String movieRes, String movieFormat) {
         this.videoId = videoId;
         this.MoviePath = moviePath;
         this.movieRes = movieRes;

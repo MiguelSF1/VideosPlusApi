@@ -23,26 +23,26 @@ public class MovieVersionResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<MovieVersion> getAll() throws SQLException {
-        return new MovieVersionRepository().getAllVersionsOfMovies();
+        return MovieVersionRepository.getInstance().getAllVersionsOfMovies();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<MovieVersion> getMovieVersions(@PathParam("id") int id) throws SQLException {
-        return new MovieVersionRepository().getMovieVersions(id);
+        return MovieVersionRepository.getInstance().getMovieVersions(id);
     }
 
     @Path("/{id}")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) throws SQLException {
-        if (!new MovieVersionRepository().movieVersionExists(id)) {
+        if (!MovieVersionRepository.getInstance().movieVersionExists(id)) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
-        String movieVersionPath = new MovieVersionRepository().getMovieVersion(id).getMovieLink();
+        String movieVersionPath = MovieVersionRepository.getInstance().getMovieVersion(id).getMovieLink();
         new File(movieVersionPath).delete();
-        new MovieVersionRepository().deleteMovieVersion(id);
+        MovieVersionRepository.getInstance().deleteMovieVersion(id);
         return Response.ok().entity("Movie Version deleted").build();
     }
 
@@ -53,7 +53,7 @@ public class MovieVersionResource {
                                @FormDataParam("upload") FormDataContentDisposition formData,
                                @FormDataParam("movieId") String movieId) throws SQLException {
 
-        if (is == null || !new MovieRepository().movieExists(Integer.parseInt(movieId))) {
+        if (is == null || !MovieRepository.getInstance().movieExists(Integer.parseInt(movieId))) {
             return Response.status(400).build();
         }
         String ext = getExt(formData.getFileName());
@@ -91,8 +91,8 @@ public class MovieVersionResource {
             }
             os.close();
             is.close();
-            new MovieVersionRepository().insertMovieVersion(new MovieVersion(movieId, format, "high", fileLocation));
-            new MovieVersionRepository().insertMovieVersion(new MovieVersion(movieId, format, "low", lowResFileLocation));
+            MovieVersionRepository.getInstance().insertMovieVersion(new MovieVersion(movieId, format, "high", fileLocation));
+            MovieVersionRepository.getInstance().insertMovieVersion(new MovieVersion(movieId, format, "low", lowResFileLocation));
         } catch (IOException | SQLException ignored) {}
     }
 

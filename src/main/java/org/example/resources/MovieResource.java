@@ -16,20 +16,20 @@ public class MovieResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Movie> getAllMovies() throws SQLException {
-        return new MovieRepository().getAllMovies();
+        return MovieRepository.getInstance().getAllMovies();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Movie getMovie(@PathParam("id") int id) throws SQLException {
-        return new MovieRepository().getMovie(id);
+        return MovieRepository.getInstance().getMovie(id);
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public Response insert(Movie movie) throws SQLException {
-        new MovieRepository().insertMovie(movie);
+        MovieRepository.getInstance().insertMovie(movie);
         return Response.ok().entity("movie added").build();
     }
 
@@ -37,10 +37,10 @@ public class MovieResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(Movie movie) throws SQLException {
-        if (!new MovieRepository().movieExists(movie.getId())) {
+        if (!MovieRepository.getInstance().movieExists(movie.getId())) {
             return Response.status(Response.Status.BAD_REQUEST).entity(movie.getId() + " Doesn't exist").build();
         }
-        new MovieRepository().updateMovie(movie);
+        MovieRepository.getInstance().updateMovie(movie);
         return Response.ok().entity(movie).build();
     }
 
@@ -48,10 +48,10 @@ public class MovieResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response delete(@PathParam("id") int id) throws SQLException {
-        if (!new MovieRepository().movieExists(id)) {
+        if (!MovieRepository.getInstance().movieExists(id)) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
-        new MovieRepository().deleteMovie(id);
+        MovieRepository.getInstance().deleteMovie(id);
         return Response.ok().entity("Item has been deleted successfully.").build();
     }
 
