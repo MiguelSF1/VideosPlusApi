@@ -1,5 +1,6 @@
 package org.example.repositories;
 
+import org.example.objects.ConnectDB;
 import org.example.objects.MovieVersion;
 
 import java.sql.*;
@@ -8,10 +9,6 @@ import java.util.List;
 
 public class MovieVersionRepository {
     private static MovieVersionRepository instance;
-    private final String dbUrl = "jdbc:mariadb://localhost/videosplus";
-    private final String dbUser = "root";
-    private final String dbPassword = "ola123";
-
     private MovieVersionRepository() {}
 
     public static MovieVersionRepository getInstance() {
@@ -23,7 +20,7 @@ public class MovieVersionRepository {
     }
 
     public void insertMovieVersion(MovieVersion movieVersion) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement insertedMovieVersion = conn.prepareStatement("INSERT INTO movie_versions " +
                     "(movie_id, movie_format, movie_resolution, movie_link) VALUES (?, ?, ?, ?)")) {
                 insertedMovieVersion.setInt(1, movieVersion.getMovieId());
@@ -36,7 +33,7 @@ public class MovieVersionRepository {
     }
 
     public MovieVersion getMovieVersion(int id) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?")) {
                 movieVersion.setInt(1, id);
                 try (ResultSet rs = movieVersion.executeQuery()) {
@@ -48,7 +45,7 @@ public class MovieVersionRepository {
     }
 
     public void deleteMovieVersion(int id) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement deletedMovieVersion = conn.prepareStatement("DELETE FROM movie_versions WHERE version_id = ?")) {
                 deletedMovieVersion.setInt(1, id);
                 deletedMovieVersion.executeUpdate();
@@ -57,7 +54,7 @@ public class MovieVersionRepository {
     }
 
     public List<MovieVersion> getMovieVersions(int id) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE movie_id = ?")) {
                 movieVersion.setInt(1, id);
                 try (ResultSet rs = movieVersion.executeQuery()) {
@@ -72,7 +69,7 @@ public class MovieVersionRepository {
     }
 
     public List<MovieVersion> getAllVersionsOfMovies() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement movieVersions = conn.prepareStatement("SELECT * FROM movie_versions")) {
                 try (ResultSet rs = movieVersions.executeQuery()) {
                     List<MovieVersion> list = new ArrayList<>();
@@ -86,7 +83,7 @@ public class MovieVersionRepository {
     }
 
     public boolean movieVersionExists(int id) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement movieVersion = conn.prepareStatement("SELECT * FROM movie_versions WHERE version_id = ?")) {
                 movieVersion.setInt(1, id);
                 try (ResultSet rs = movieVersion.executeQuery()) {

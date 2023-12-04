@@ -8,22 +8,21 @@ import org.example.repositories.MovieRepository;
 
 
 import java.sql.SQLException;
-import java.util.List;
 
 @Path("/movies")
 public class MovieResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Movie> getAllMovies() throws SQLException {
-        return MovieRepository.getInstance().getAllMovies();
+    public Response getAllMovies() throws SQLException {
+        return Response.ok().entity(MovieRepository.getInstance().getAllMovies()).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Movie getMovie(@PathParam("id") int id) throws SQLException {
-        return MovieRepository.getInstance().getMovie(id);
+    public Response getMovie(@PathParam("id") int id) throws SQLException {
+        return Response.ok().entity(MovieRepository.getInstance().getMovie(id)).build();
     }
 
     @PUT

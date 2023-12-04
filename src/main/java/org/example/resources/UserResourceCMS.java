@@ -7,22 +7,21 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.sql.SQLException;
-import java.util.List;
 
 @Path("/usersCMS")
 public class UserResourceCMS {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAll() throws SQLException {
-        return UserRepositoryCMS.getInstance().getAllUsers();
+    public Response getAll() throws SQLException {
+        return Response.ok().entity(UserRepositoryCMS.getInstance().getAllUsers()).build();
     }
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("username") String username) throws SQLException {
-        return UserRepositoryCMS.getInstance().getUser(username);
+    public Response getUser(@PathParam("username") String username) throws SQLException {
+        return Response.ok().entity(UserRepositoryCMS.getInstance().getUser(username)).build();
     }
 
     @POST

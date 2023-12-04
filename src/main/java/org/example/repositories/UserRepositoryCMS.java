@@ -1,5 +1,6 @@
 package org.example.repositories;
 
+import org.example.objects.ConnectDB;
 import org.example.objects.User;
 
 import java.sql.*;
@@ -9,10 +10,6 @@ import java.util.Objects;
 
 public class UserRepositoryCMS {
     private static UserRepositoryCMS instance;
-    private final String dbUrl = "jdbc:mariadb://localhost/videosplus";
-    private final String dbUser = "root";
-    private final String dbPassword = "ola123";
-
     private UserRepositoryCMS() {}
 
     public static UserRepositoryCMS getInstance() {
@@ -24,7 +21,7 @@ public class UserRepositoryCMS {
     }
 
     public void insertUser(User user) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement insertedUser = conn.prepareStatement("INSERT INTO users_cms (username, password) VALUES (?, ?);")) {
                 insertedUser.setString(1, user.getUsername());
                 insertedUser.setString(2, String.valueOf(user.getPassword().hashCode()));
@@ -34,7 +31,7 @@ public class UserRepositoryCMS {
     }
 
     public void deleteUser(int id) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement deletedUser = conn.prepareStatement("DELETE FROM users_cms WHERE user_id = ?")) {
                 deletedUser.setInt(1, id);
                 deletedUser.executeUpdate();
@@ -43,7 +40,7 @@ public class UserRepositoryCMS {
     }
 
     public User getUser(String username) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement user = conn.prepareStatement("SELECT * FROM users_cms WHERE username = ?")) {
                 user.setString(1, username);
                 try (ResultSet rs = user.executeQuery()) {
@@ -55,7 +52,7 @@ public class UserRepositoryCMS {
     }
 
     public List<User> getAllUsers() throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement users = conn.prepareStatement("SELECT * from users_cms")) {
                 try (ResultSet rs = users.executeQuery()) {
                     List<User> list = new ArrayList<>();
@@ -69,7 +66,7 @@ public class UserRepositoryCMS {
     }
 
     public boolean userExists(String username) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement user = conn.prepareStatement("SELECT * FROM users_cms WHERE username = ?")) {
                 user.setString(1, username);
                 try (ResultSet rs = user.executeQuery()) {
@@ -80,7 +77,7 @@ public class UserRepositoryCMS {
     }
 
     public boolean userExistsById(int id) throws SQLException {
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement user = conn.prepareStatement("SELECT * FROM users_cms WHERE user_id = ?")) {
                 user.setInt(1, id);
                 try (ResultSet rs = user.executeQuery()) {
@@ -95,7 +92,7 @@ public class UserRepositoryCMS {
             return false;
         }
 
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword)) {
+        try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement user = conn.prepareStatement("SELECT password FROM users_cms WHERE username = ?")) {
                 user.setString(1, username);
                 try (ResultSet rs = user.executeQuery()) {

@@ -16,21 +16,20 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.io.*;
 import java.sql.SQLException;
-import java.util.List;
 
 @Path("/movieVersions")
 public class MovieVersionResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<MovieVersion> getAll() throws SQLException {
-        return MovieVersionRepository.getInstance().getAllVersionsOfMovies();
+    public Response getAll() throws SQLException {
+        return Response.ok().entity(MovieVersionRepository.getInstance().getAllVersionsOfMovies()).build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<MovieVersion> getMovieVersions(@PathParam("id") int id) throws SQLException {
-        return MovieVersionRepository.getInstance().getMovieVersions(id);
+    public Response getMovieVersions(@PathParam("id") int id) throws SQLException {
+        return Response.ok().entity(MovieVersionRepository.getInstance().getMovieVersions(id)).build();
     }
 
     @Path("/{id}")
@@ -73,6 +72,28 @@ public class MovieVersionResource {
         }
     }
 
+    @POST
+    @Path("/stream")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response movieStream(MovieVersion movieVersion) {
+        String moviePath = movieVersion.getMovieLink();
+        int movieId = movieVersion.getMovieId();
+        String movieRes = movieVersion.getMovieResolution();
+        String movieFormat = movieVersion.getMovieFormat();
+        String URL;
+        File f1 = new File("/tmp/hls/" + movieId + movieRes + movieFormat + "-0.ts");
+        URL = "http://192.168.1.103:1234/" + movieId + movieRes + movieFormat + ".m3u8";
+        if (f1.exists()) {
+            return Response.status(200).entity(URL).build();
+        }
+
+        StreamThread streamThread = new StreamThread(movieId, moviePath, movieRes, movieFormat);
+        streamThread.start();
+
+        return Response.status(200).entity(URL).build();
+    }
+
     private String getExt(String fileName){
         int lastIndexOf = fileName.lastIndexOf(".");
         if (lastIndexOf == -1) {
@@ -94,27 +115,5 @@ public class MovieVersionResource {
             MovieVersionRepository.getInstance().insertMovieVersion(new MovieVersion(movieId, format, "high", fileLocation));
             MovieVersionRepository.getInstance().insertMovieVersion(new MovieVersion(movieId, format, "low", lowResFileLocation));
         } catch (IOException | SQLException ignored) {}
-    }
-
-    @POST
-    @Path("/stream")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response movieStream(MovieVersion movieVersion) {
-        String moviePath = movieVersion.getMovieLink();
-        int movieId = movieVersion.getMovieId();
-        String movieRes = movieVersion.getMovieResolution();
-        String movieFormat = movieVersion.getMovieFormat();
-        String URL;
-        File f1 = new File("/tmp/hls/" + movieId + movieRes + movieFormat + "-0.ts");
-        URL = "http://192.168.1.103:1234/" + movieId + movieRes + movieFormat + ".m3u8";
-        if (f1.exists()) {
-            return Response.status(200).entity(URL).build();
-        }
-
-        StreamThread streamThread = new StreamThread(movieId, moviePath, movieRes, movieFormat);
-        streamThread.start();
-
-        return Response.status(200).entity(URL).build();
     }
 }

@@ -8,22 +8,21 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.sql.SQLException;
-import java.util.List;
 
 @Path("/users")
 public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAll() throws SQLException {
-        return UserRepository.getInstance().getAllUsers();
+    public Response getAll() throws SQLException {
+        return Response.ok().entity(UserRepository.getInstance().getAllUsers()).build();
     }
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public User getUser(@PathParam("username") String username) throws SQLException {
-        return UserRepository.getInstance().getUser(username);
+    public Response getUser(@PathParam("username") String username) throws SQLException {
+        return Response.ok().entity(UserRepository.getInstance().getUser(username)).build();
     }
 
     @POST
