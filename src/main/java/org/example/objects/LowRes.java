@@ -6,25 +6,26 @@ import net.bramp.ffmpeg.FFprobe;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
 
 public class LowRes extends Thread {
-    String fileName;
+    String input;
     String ext;
-    String ProjPath;
+    String output;
+    int movieId;
+    String filename;
 
-    public LowRes(String fileName, String ext, String projPath) {
-        this.fileName = fileName;
+    public LowRes(String input, String ext, String output, int movieId, String filename) {
+        this.input = input;
         this.ext = ext;
-        this.ProjPath = projPath;
+        this.output = output;
+        this.movieId = movieId;
+        this.filename = filename;
     }
 
     public void run() {
         try {
             FFmpeg ffmpeg;
             FFprobe ffprobe;
-            String input, output;
             ffmpeg = new FFmpeg("ffmpeg");
             ffprobe = new FFprobe("ffprobe");
-            input = ProjPath + "/src/main/resources/videos/High/" + fileName;
-            output = ProjPath + "/src/main/resources/videos/Low/" + fileName;
 
             FFmpegBuilder builder = new FFmpegBuilder()
                     .setInput(input)
@@ -36,6 +37,8 @@ public class LowRes extends Thread {
                     .done();
             FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
             executor.createJob(builder).run();
+            M3u8Thread m3u8Thread = new M3u8Thread(output, ext, movieId, "low", filename);
+            m3u8Thread.start();
         } catch (Exception ignored) {}
     }
 }
