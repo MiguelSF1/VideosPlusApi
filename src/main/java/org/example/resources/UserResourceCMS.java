@@ -13,46 +13,65 @@ public class UserResourceCMS {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll() throws SQLException {
-        return Response.ok().entity(UserRepositoryCMS.getInstance().getAllUsers()).build();
+    public Response getAll() {
+        try {
+            return Response.ok().entity(UserRepositoryCMS.getInstance().getAllUsers()).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam("username") String username) throws SQLException {
-        return Response.ok().entity(UserRepositoryCMS.getInstance().getUser(username)).build();
+    public Response getUser(@PathParam("username") String username) {
+        try {
+            return Response.ok().entity(UserRepositoryCMS.getInstance().getUser(username)).build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response insert(User user) throws SQLException {
-        if (UserRepositoryCMS.getInstance().userExists(user.getUsername())) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("User Already Exists").build();
+    public Response insert(User user) {
+        try {
+            if (UserRepositoryCMS.getInstance().userExists(user.getUsername())) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("User Already Exists").build();
+            }
+            UserRepositoryCMS.getInstance().insertUser(user);
+            return Response.ok().entity("user created").build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-
-        UserRepositoryCMS.getInstance().insertUser(user);
-        return Response.ok().entity("user created").build();
     }
 
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response login(User user) throws SQLException {
-        if (!UserRepositoryCMS.getInstance().login(user.getUsername(), user.getPassword())) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity("Failed Login Attempt").build();
+    public Response login(User user) {
+        try {
+            if (!UserRepositoryCMS.getInstance().login(user.getUsername(), user.getPassword())) {
+                return Response.status(Response.Status.UNAUTHORIZED).entity("Failed Login Attempt").build();
+            }
+            return Response.ok().entity("Successful Login Attempt").build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.ok().entity("Successful Login Attempt").build();
     }
 
     @Path("/{id}")
     @DELETE
-    public Response delete(@PathParam("id") int id) throws SQLException {
-        if (!UserRepositoryCMS.getInstance().userExistsById(id)) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
+    public Response delete(@PathParam("id") int id) {
+        try {
+            if (!UserRepositoryCMS.getInstance().userExistsById(id)) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
+            }
+            UserRepositoryCMS.getInstance().deleteUser(id);
+            return Response.ok().entity("user deleted").build();
+        } catch (SQLException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        UserRepositoryCMS.getInstance().deleteUser(id);
-        return Response.ok().entity("user deleted").build();
     }
 }
