@@ -38,7 +38,7 @@ public class MovieVersionResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
         String movieVersionPath = MovieVersionRepository.getInstance().getMovieVersion(id).getMovieLink();
-        File versionToDelete = new File(findFolder(movieVersionPath));
+        File versionToDelete = new File(getFolderPath(movieVersionPath));
         if (!deleteDirectory(versionToDelete)) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -92,7 +92,7 @@ public class MovieVersionResource {
         return fileName.substring(lastIndexOf).substring(1);
     }
 
-    private String findFolder(String path) {
+    private String getFolderPath(String path) {
         int lastIndexOf = path.lastIndexOf("/");
         int slashCount = 0;
         int startIndex = 0;
