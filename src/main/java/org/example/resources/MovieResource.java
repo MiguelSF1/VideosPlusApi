@@ -4,10 +4,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.example.objects.Movie;
+import org.example.objects.MovieVersion;
 import org.example.repositories.MovieRepository;
+import org.example.repositories.MovieVersionRepository;
 
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Path("/movies")
 public class MovieResource {
@@ -50,8 +53,13 @@ public class MovieResource {
         if (!MovieRepository.getInstance().movieExists(id)) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Invalid ID").build();
         }
+        List<MovieVersion> movieVersions = MovieVersionRepository.getInstance().getMovieVersions(id);
+        for (MovieVersion movieVersion : movieVersions) {
+            if (!MovieVersionRepository.getInstance().deleteMovieVersion(movieVersion.getId())) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        }
         MovieRepository.getInstance().deleteMovie(id);
         return Response.ok().entity("Item has been deleted successfully.").build();
     }
-
 }

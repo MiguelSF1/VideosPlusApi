@@ -3,6 +3,7 @@ package org.example.repositories;
 import org.example.objects.ConnectDB;
 import org.example.objects.MovieVersion;
 
+import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +45,17 @@ public class MovieVersionRepository {
         }
     }
 
-    public void deleteMovieVersion(int id) throws SQLException {
+    public boolean deleteMovieVersion(int id) throws SQLException {
         try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement deletedMovieVersion = conn.prepareStatement("DELETE FROM movie_versions WHERE version_id = ?")) {
+                String movieVersionPath = getMovieVersion(id).getMovieLink();
+                File versionToDelete = new File(getFolderPath(movieVersionPath));
+                if (!deleteDirectory(versionToDelete)) {
+                    return false;
+                }
                 deletedMovieVersion.setInt(1, id);
                 deletedMovieVersion.executeUpdate();
+                return true;
             }
         }
     }
@@ -91,5 +98,32 @@ public class MovieVersionRepository {
                 }
             }
         }
+    }
+
+    private String getFolderPath(String path) {
+        int lastIndexOf = path.lastIndexOf("/");
+        int slashCount = 0;
+        int startIndex = 0;
+        for (int i = 0; i < path.length(); i++) {
+            if (path.charAt(i) == ('/')) {
+                slashCount++;
+                if (slashCount == 3) {
+                    startIndex = i;
+                    break;
+                }
+            }
+        }
+
+        return "/home/miguel/movieFiles" + path.substring(startIndex, lastIndexOf);
+    }
+
+    private boolean deleteDirectory(File directoryToBeDeleted) {
+        File[] allContents = directoryToBeDeleted.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
+            }
+        }
+        return directoryToBeDeleted.delete();
     }
 }
