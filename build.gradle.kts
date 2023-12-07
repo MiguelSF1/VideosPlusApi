@@ -22,7 +22,6 @@ dependencies {
     implementation("org.glassfish.jersey.containers:jersey-container-jetty-http:3.1.3")
     implementation("org.glassfish.jersey.media:jersey-media-json-jackson:3.1.3")
     implementation("org.glassfish.jersey.inject:jersey-hk2:3.1.3")
-    implementation("net.bramp.ffmpeg:ffmpeg:0.8.0")
     implementation("jakarta.ws.rs:jakarta.ws.rs-api:3.1.0")
     implementation("org.glassfish.jersey.media:jersey-media-multipart:3.1.3")
     implementation("org.slf4j:slf4j-api:1.7.25")
