@@ -142,7 +142,8 @@ public class MovieVersionResource {
             process.waitFor();
             File ogCopy = new File(fileLocation);
             ogCopy.delete();
-            MovieVersionRepository.getInstance().insertMovieVersion(new MovieVersion(movieId, ext, resolution, "http://192.168.1.103:1234/" + resolution + "/" + filename.substring(0, filename.length() - 4) + ext + "/" + filename.substring(0, filename.length() - 4) + ext + ".m3u8"));
+            String filenameWithoutExt = filename.substring(0, filename.length() - 4);
+            MovieVersionRepository.getInstance().insertMovieVersion(new MovieVersion(movieId, ext, resolution, "http://192.168.1.103:1234/" + resolution + "/" + filenameWithoutExt + ext + "/" + filenameWithoutExt + ext + ".m3u8"));
         } catch (IOException | InterruptedException | SQLException e) {
             throw new RuntimeException(e);
         }
@@ -160,6 +161,5 @@ public class MovieVersionResource {
             throw new RuntimeException(e);
         }
     }
-
 }
 
