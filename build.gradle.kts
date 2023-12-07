@@ -26,6 +26,7 @@ dependencies {
     implementation("org.glassfish.jersey.media:jersey-media-multipart:3.1.3")
     implementation("org.slf4j:slf4j-api:1.7.25")
     testImplementation("org.slf4j:slf4j-simple:1.7.25")
+    implementation("org.springframework.security:spring-security-crypto:5.5.8")
     implementation("org.eclipse.jetty:jetty-server:11.0.18")
     implementation("org.eclipse.jetty:jetty-servlets:11.0.18")
     compileOnly("jakarta.servlet:jakarta.servlet-api:5.0.0")

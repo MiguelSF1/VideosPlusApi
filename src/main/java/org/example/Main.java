@@ -6,7 +6,6 @@ import org.example.resources.UserResource;
 import org.example.resources.UserResourceCMS;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-
 import java.net.URI;
 
 public class Main {

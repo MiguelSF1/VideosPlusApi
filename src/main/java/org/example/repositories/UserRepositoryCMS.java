@@ -2,11 +2,11 @@ package org.example.repositories;
 
 import org.example.objects.ConnectDB;
 import org.example.objects.User;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class UserRepositoryCMS {
     private static UserRepositoryCMS instance;
@@ -23,8 +23,9 @@ public class UserRepositoryCMS {
     public void insertUser(User user) throws SQLException {
         try (Connection conn = ConnectDB.getConnection()) {
             try (PreparedStatement insertedUser = conn.prepareStatement("INSERT INTO users_cms (username, password) VALUES (?, ?);")) {
+                Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
                 insertedUser.setString(1, user.getUsername());
-                insertedUser.setString(2, String.valueOf(user.getPassword().hashCode()));
+                insertedUser.setString(2, pbkdf2PasswordEncoder.encode(user.getPassword()));
                 insertedUser.executeUpdate();
             }
         }
@@ -96,8 +97,9 @@ public class UserRepositoryCMS {
             try (PreparedStatement user = conn.prepareStatement("SELECT password FROM users_cms WHERE username = ?")) {
                 user.setString(1, username);
                 try (ResultSet rs = user.executeQuery()) {
+                    Pbkdf2PasswordEncoder pbkdf2PasswordEncoder = new Pbkdf2PasswordEncoder();
                     rs.first();
-                    return Objects.equals(rs.getString(1), String.valueOf(password.hashCode()));
+                    return pbkdf2PasswordEncoder.matches(password, rs.getString(1));
                 }
             }
         }
