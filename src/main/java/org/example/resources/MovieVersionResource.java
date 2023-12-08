@@ -111,7 +111,7 @@ public class MovieVersionResource {
         String[] cmd;
         cmd = new String[] {"ffmpeg", "-i", input, "-vf", "scale=480:360", output};
         processBuilder.command(cmd);
-        Process process = processBuilder.start();
+        Process process = processBuilder.inheritIO().start();
         process.waitFor();
     }
 
@@ -120,7 +120,7 @@ public class MovieVersionResource {
         String[] cmd;
         cmd = new String[] {"ffmpeg", "-i", fileLocation, "-codec:", "copy", "-start_number", "0", "-hls_time", "10", "-hls_list_size", "0", "-f", "hls", fileLocation.substring(0, fileLocation.length() - (ext.length() + 1)) + ext + ".m3u8"};
         processBuilder.command(cmd);
-        Process process = processBuilder.start();
+        Process process = processBuilder.inheritIO().start();
         process.waitFor();
         File ogCopy = new File(fileLocation);
         if (!ogCopy.delete()) {
