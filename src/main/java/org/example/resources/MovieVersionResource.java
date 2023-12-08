@@ -62,25 +62,30 @@ public class MovieVersionResource {
                                @FormDataParam("upload") FormDataContentDisposition formData,
                                @FormDataParam("movieId") String movieId) {
         String ProjPath = "/home/miguel/movieFiles/";
-        File highPath = new File(ProjPath + "high/" + removeExt(formData.getFileName()) + getExt(formData.getFileName()));
-        File lowPath = new File(ProjPath + "low/" + removeExt(formData.getFileName()) + getExt(formData.getFileName()));
+        String formFileName = formData.getFileName().replaceAll("\\s+","");
+        File highPath = new File(ProjPath + "high/" + removeExt(formFileName) + getExt(formFileName));
+        File lowPath = new File(ProjPath + "low/" + removeExt(formFileName) + getExt(formFileName));
         try {
             if (is == null || !MovieRepository.getInstance().movieExists(Integer.parseInt(movieId))) {
                 return Response.status(400).build();
             }
-            String ext = getExt(formData.getFileName());
+            String ext = getExt(formFileName);
             if (ext.isEmpty()) {
                 return Response.status(415).entity("need format").build();
             }
-            if (!highPath.mkdir() || !lowPath.mkdir()) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            if (!highPath.exists() && !lowPath.exists()) {
+                if (!highPath.mkdir() || !lowPath.mkdir()) {
+                    return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+                }
             }
-            String fileLocation = highPath + "/" + formData.getFileName();
-            String lowResFileLocation = lowPath + "/" + formData.getFileName();
+            String fileLocation = highPath + "/" + formFileName;
+            String lowResFileLocation = lowPath + "/" + formFileName;
             saveFile(is, fileLocation);
-            getLowRes(fileLocation, lowResFileLocation);
-            getM3u8AndFinish(fileLocation, getExt(fileLocation), Integer.parseInt(movieId), "high", formData.getFileName());
-            getM3u8AndFinish(lowResFileLocation, getExt(lowResFileLocation), Integer.parseInt(movieId), "low", formData.getFileName());
+            if (is.available() == 0) {
+                getLowRes(fileLocation, lowResFileLocation);
+                getM3u8AndFinish(fileLocation, getExt(fileLocation), Integer.parseInt(movieId), "high", formFileName);
+                getM3u8AndFinish(lowResFileLocation, getExt(lowResFileLocation), Integer.parseInt(movieId), "low", formFileName);
+            }
             return Response.status(Response.Status.OK).entity("completed upload").build();
         } catch (IOException | InterruptedException | SQLException e) {
             if (!highPath.delete() || !lowPath.delete()) {
