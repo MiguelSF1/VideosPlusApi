@@ -61,10 +61,10 @@ public class MovieVersionResource {
     public Response uploadFile(@FormDataParam("upload") InputStream is,
                                @FormDataParam("upload") FormDataContentDisposition formData,
                                @FormDataParam("movieId") String movieId) {
-        String ProjPath = "/home/miguel/movieFiles/";
+        String videosPath = "/home/miguel/movieFiles/";
         String formFileName = formData.getFileName().replaceAll("\\s+","");
-        File highPath = new File(ProjPath + "high/" + removeExt(formFileName) + getExt(formFileName));
-        File lowPath = new File(ProjPath + "low/" + removeExt(formFileName) + getExt(formFileName));
+        File highPath = new File(videosPath + "high/" + removeExt(formFileName) + getExt(formFileName));
+        File lowPath = new File(videosPath + "low/" + removeExt(formFileName) + getExt(formFileName));
         try {
             if (is == null || !MovieRepository.getInstance().movieExists(Integer.parseInt(movieId))) {
                 return Response.status(400).build();
